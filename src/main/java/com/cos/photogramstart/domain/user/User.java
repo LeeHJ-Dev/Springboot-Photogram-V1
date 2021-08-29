@@ -18,13 +18,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length = 20, unique = true)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @Column
@@ -33,7 +33,7 @@ public class User {
     @Column
     private String bio;         //자기소개
 
-    @Column
+    @Column(nullable = false)
     private String email;
 
     @Column
