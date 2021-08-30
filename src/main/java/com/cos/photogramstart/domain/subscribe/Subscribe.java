@@ -12,24 +12,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "subscribe_uk",
-                        columnNames = {"fromUser","toUser"}
-                )
-        }
-)
+@Table(uniqueConstraints = {@UniqueConstraint(name="subscribe_uk", columnNames = {"fromUserId","toUSerId"})})
 public class Subscribe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "fromUser")
+    @JoinColumn(name = "fromUserId")
     @ManyToOne(fetch = FetchType.LAZY)
     private User fromUser;
 
-    @JoinColumn(name = "toUser")
+    @JoinColumn(name = "toUSerId")
     @ManyToOne(fetch = FetchType.LAZY)
     private User toUser;
 
