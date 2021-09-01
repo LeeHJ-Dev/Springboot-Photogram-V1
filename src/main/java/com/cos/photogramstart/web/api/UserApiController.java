@@ -57,7 +57,7 @@ public class UserApiController {
         /**
          * 회원정보수정 정상리턴
          */
-        return new CMRespDto<User>(1,"회원수정완료",userEntity);
+        return new CMRespDto<User>(1,"회원수정완료",userEntity); //응답시에 userEntity 모든 getter 함수호출되어 json 파싱되어 응답
     }
 
 

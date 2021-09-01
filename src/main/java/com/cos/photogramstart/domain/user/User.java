@@ -1,6 +1,8 @@
 package com.cos.photogramstart.domain.user;
 
 import com.cos.photogramstart.domain.image.Image;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,8 +69,10 @@ public class User {
     /*****************************************************************************************************/
     //나는 연관관계의 주인이 아니다. 그러므로 테이블에 컬럼을 만들지 마.
     //User를 select할때 해당 User id 로 등록된 image들을 다 가져와.
+    @JsonIgnoreProperties(value = {"user"})
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Image> images = new ArrayList<Image>();        //양방향 맵핑
+    private List<Image> images = new ArrayList<>();//new ArrayList<Image>();        //양방향 맵핑
+
 
     public void addImage(Image image){
         this.images.add(image);
