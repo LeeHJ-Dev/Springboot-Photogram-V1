@@ -1,5 +1,6 @@
 package com.cos.photogramstart.domain.user;
 
+import com.cos.photogramstart.domain.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -58,4 +61,18 @@ public class User {
     public void createDate(){
         this.createDate = LocalDateTime.now();
     }
+
+    /*****************************************************************************************************/
+    /* 사용자가 등록한 사진에 대한 연관관계 맵핑  */
+    /*****************************************************************************************************/
+    //나는 연관관계의 주인이 아니다. 그러므로 테이블에 컬럼을 만들지 마.
+    //User를 select할때 해당 User id 로 등록된 image들을 다 가져와.
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Image> images = new ArrayList<Image>();        //양방향 맵핑
+
+    public void addImage(Image image){
+        this.images.add(image);
+
+    }
+
 }

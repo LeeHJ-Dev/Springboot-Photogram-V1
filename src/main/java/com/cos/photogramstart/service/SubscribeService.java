@@ -1,25 +1,22 @@
 package com.cos.photogramstart.service;
 
-import com.cos.photogramstart.domain.subscribe.Subscribe;
 import com.cos.photogramstart.domain.subscribe.SubscribeRepository;
-import com.cos.photogramstart.domain.user.User;
-import com.cos.photogramstart.domain.user.UserRepository;
 import com.cos.photogramstart.handler.ex.CustomApiException;
-import com.cos.photogramstart.handler.ex.CustomValidationApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLException;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class SubscribeService {
 
-    private final UserRepository userRepository;
     private final SubscribeRepository subscribeRepository;
 
+    /**
+     * 사용자가 특정 사용자를 구독하는 경우
+     * @param formUserId 사용자 userId
+     * @param toUserId 구독자 userId
+     */
     @Transactional(readOnly = false)
     public void 구독하기(Long formUserId, Long toUserId) {
         try {
@@ -30,6 +27,11 @@ public class SubscribeService {
         }
     }
 
+    /**
+     * 사용자가 등록된 구독자를 삭제하는 경우
+     * @param formUserId 사용자 userId
+     * @param toUserId 구독자 userId
+     */
     @Transactional(readOnly = false)
     public void 구독취소하기(Long formUserId, Long toUserId){
         try {

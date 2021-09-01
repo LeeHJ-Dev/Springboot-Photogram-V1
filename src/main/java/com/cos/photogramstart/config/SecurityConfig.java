@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@EnableWebSecurity  //해당파일로 시큐리티를 활성화 한다.
+@EnableWebSecurity  //해당파일로 시큐리티를 활성화 한다. 
 @Configuration  //IOC
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

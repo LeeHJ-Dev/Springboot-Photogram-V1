@@ -4,16 +4,11 @@ import com.cos.photogramstart.config.auth.PrincipalDetails;
 import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @Controller
@@ -21,13 +16,14 @@ public class UserController {
 
     private final UserService userService;
 
-
     /**
-     * Path. Http://localhost:8080/user/profile
+     * Path. Http://localhost:8080/user/{id}
      * @return
      */
     @GetMapping(value = "/user/{id}")
-    public String profile(@PathVariable("id") Long id){
+    public String profile(@PathVariable("id") Long id, Model model){
+        User userEntity = userService.회원프로필(id);
+        model.addAttribute("user",userEntity);
         return "/user/profile";
     }
 

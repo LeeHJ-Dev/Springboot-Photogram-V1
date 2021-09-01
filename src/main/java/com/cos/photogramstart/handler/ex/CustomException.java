@@ -1,8 +1,8 @@
 package com.cos.photogramstart.handler.ex;
 
-public class CustomApiException extends RuntimeException{
+public class CustomException extends RuntimeException{
     private static final long serialVersionUID = 1L;
-    public CustomApiException(String message) {
+    public CustomException(String message) {
         super(message);
     }
 }
