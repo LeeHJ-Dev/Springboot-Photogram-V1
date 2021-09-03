@@ -1,8 +1,11 @@
 package com.cos.photogramstart.domain.subscribe;
 
+import com.cos.photogramstart.web.dto.subscribe.SubScribeDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  * JpaRepository Extends -> SubscribeRepository Interface
@@ -18,7 +21,7 @@ public interface SubscribeRepository extends JpaRepository<Subscribe,Long>{
      */
     @Modifying //insert, delete, update를 네이티브 쿼리로 작성하려면 해당 어노테이션 필요!
     @Query(value = "insert into subscribe(fromUserId,toUserId,createDate) values (:fromUserId,:toUserId,now())", nativeQuery = true)
-    void mSubscribe(Long fromUserId, Long toUserId);
+    public void mSubscribe(Long fromUserId, Long toUserId);
 
 
     /**
@@ -28,5 +31,23 @@ public interface SubscribeRepository extends JpaRepository<Subscribe,Long>{
      */
     @Modifying
     @Query(value = "delete from subscribe where fromUserId = :fromUserId and toUserId = :toUserId", nativeQuery = true)
-    void mUnSubscribe(Long fromUserId, long toUserId);
+    public void mUnSubscribe(Long fromUserId, long toUserId);
+
+    /**
+     * 사용자가 해당 구독자를 구독했는지 확인
+     * @param principalId
+     * @param pageUserId
+     * @return
+     */
+    @Query(value = "select count(*) from subscribe where fromUserId = :principalId and toUserId = :pageUserId", nativeQuery = true)
+    public int mSubscribeState(Long principalId,Long pageUserId);
+
+    /**
+     * 사용자가 구독하고 있는 구독자 총 건수
+     * @param principalId
+     * @return 구독자 건수
+     */
+    @Query(value = "select count(*) from subscribe where fromUserId = :pageUserId", nativeQuery = true)
+    public int mSubscribeCount(Long pageUserId);
+
 }
