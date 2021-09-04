@@ -3,15 +3,22 @@ package com.cos.photogramstart.service;
 import com.cos.photogramstart.config.auth.PrincipalDetails;
 import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.domain.image.ImageRepository;
+import com.cos.photogramstart.domain.likes.LikesRepository;
 import com.cos.photogramstart.web.dto.image.ImageUploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -19,6 +26,19 @@ import java.util.UUID;
 public class ImageService {
 
     private final ImageRepository imageRepository;
+    private final LikesRepository likesRepository;
+
+    /**
+     * 사용자가 구독한 사용자의 사진정보를 페이징처리한다.
+     * @param principalId
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public Page<Image> 이미지스토리(Long principalId, Pageable pageable){
+        Page<Image> images = imageRepository.mStory(principalId, pageable);
+        return images;
+    }
+
 
     /**
      * application.yml
@@ -64,5 +84,15 @@ public class ImageService {
          */
         Image image = imageUploadDto.toEntity(imageFileName,principalDetails.getUser());
         Image imageEntity = imageRepository.save(image);
+    }
+
+    @Transactional(readOnly = false)
+    public void 좋아요(Long principalId, Long imageId){
+        likesRepository.mLike(principalId,imageId);
+    }
+
+    @Transactional(readOnly = false)
+    public void 좋아요취소(Long principalId, Long imageId){
+        likesRepository.mUnLike(principalId,imageId);
     }
 }

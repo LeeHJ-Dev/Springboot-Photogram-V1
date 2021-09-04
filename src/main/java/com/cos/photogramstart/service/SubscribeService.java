@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -59,22 +60,24 @@ public class SubscribeService {
 
         //네이티브 쿼리 작성
         StringBuffer sb = new StringBuffer();
-        sb.append("select t1.id, t1.username, t1.profileImageUrl ");
-        sb.append("     , (select true from subscribe x where x.fromUserId = ? and toUserId = ?) as subscribeState ");
-        sb.append("     , (? = t1.id) as equalUserState ");
-        sb.append("  from user t1, subscribe t2 ");
-        sb.append(" where t1.id = t2.toUserId ");
-        sb.append("   and t2.fromUserId = ? ");
+        sb.append("select t1.id, t1.username, t1.profileImageUrl                ");
+        sb.append("    , if((select true from subscribe x where x.fromUserId = ? and toUserId = t1.id),1,0) as subscribeState "); //로그인 userId
+        sb.append("    , if((?=t1.id),1,0) as equalUserState                    ");
+        sb.append("  from user t1, subscribe t2                                 ");
+        sb.append(" where t1.id = t2.toUserId                                   ");
+        sb.append("   and t2.fromUserId = ?                                     ");     //페이지 userId
 
         //네이티브 쿼리 결과값
         Query query = em.createNativeQuery(sb.toString())
                 .setParameter(1, principalId)
                 .setParameter(2, principalId)
-                .setParameter(3, pageUserId);
+                .setParameter(3, pageUserId)
+                ;
 
         //쿼리실행
         JpaResultMapper resultMapper = new JpaResultMapper();
-        List<SubScribeDto> subScribeDtos = resultMapper.list(query, SubScribeDto.class);
-        return subScribeDtos;
+        List<SubScribeDto> subScribeDtoList = resultMapper.list(query, SubScribeDto.class);
+
+        return subScribeDtoList;
     }
 }

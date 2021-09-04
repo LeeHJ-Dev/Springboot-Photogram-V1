@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class SubScribeDto {
-    private Long id;
+    private BigInteger id;
     private String username;
     private String profileImageUrl;
-    private Integer subscribeState;
-    private Integer equalUserState;
+    private BigInteger subscribeState;
+    private BigInteger equalUserState;
 }
