@@ -2,16 +2,14 @@ package com.cos.photogramstart.domain.likes;
 
 import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.domain.user.User;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
@@ -25,15 +23,13 @@ public class Likes {
 
     @JoinColumn(name = "imageId")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Column
     private Image image;
 
+    @JsonIgnoreProperties(value = {"images"})
     @JoinColumn(name = "userId")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Column
     private User user;
 
     @Column
     private LocalDateTime createDate;
-
 }

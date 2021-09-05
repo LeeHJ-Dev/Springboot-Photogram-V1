@@ -1,5 +1,6 @@
 package com.cos.photogramstart.domain.image;
 
+import com.cos.photogramstart.domain.likes.Likes;
 import com.cos.photogramstart.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -33,7 +35,16 @@ public class Image {
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    //이미지좋아요
+    //이미지좋아요 양방향 맵핑
+    @JsonIgnoreProperties(value = {"image"})
+    @OneToMany(mappedBy = "image", fetch = FetchType.LAZY)
+    private List<Likes> likes;
+
+    @Transient
+    private boolean likeState;
+
+    @Transient
+    private int likeCount;
     //이미지댓글
 
     @Column

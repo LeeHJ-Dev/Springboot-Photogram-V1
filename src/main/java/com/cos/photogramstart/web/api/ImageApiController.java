@@ -2,7 +2,9 @@ package com.cos.photogramstart.web.api;
 
 import com.cos.photogramstart.config.auth.PrincipalDetails;
 import com.cos.photogramstart.domain.image.Image;
+import com.cos.photogramstart.domain.likes.Likes;
 import com.cos.photogramstart.service.ImageService;
+import com.cos.photogramstart.service.LikesService;
 import com.cos.photogramstart.web.dto.CMRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import java.util.List;
 public class ImageApiController {
 
     private final ImageService imageService;
+    private final LikesService likesService;
 
     @GetMapping(value = "/api/image")
     public ResponseEntity<?> images(@AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -33,14 +36,14 @@ public class ImageApiController {
     @PostMapping(value = "/api/image/{imageId}/like")
     public ResponseEntity<?> likes(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                    @PathVariable("imageId") Long imageId){
-        imageService.좋아요(principalDetails.getUser().getId(),imageId);
+        likesService.좋아요(principalDetails.getUser().getId(),imageId);
         return new ResponseEntity<>(new CMRespDto<>(1,"좋아요성공",null),HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/api/image/{imageId}/like")
-    public ResponseEntity<?> unLike(@AuthenticationPrincipal PrincipalDetails principalDetails,
+    public ResponseEntity<?> unLikes(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                     @PathVariable("imageId") Long imageId){
-        imageService.좋아요취소(principalDetails.getUser().getId(),imageId);
+        likesService.좋아요취소(principalDetails.getUser().getId(),imageId);
         return new ResponseEntity<>(new CMRespDto<>(1,"좋아요취소성공",null),HttpStatus.OK);
     }
 

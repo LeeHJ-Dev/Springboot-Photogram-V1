@@ -28,6 +28,12 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final LikesRepository likesRepository;
 
+    @Transactional(readOnly = true)
+    public List<Image> 인기사진(){
+        return imageRepository.mPopular();
+    }
+
+
     /**
      * 사용자가 구독한 사용자의 사진정보를 페이징처리한다.
      * @param principalId
@@ -36,6 +42,19 @@ public class ImageService {
     @Transactional(readOnly = true)
     public Page<Image> 이미지스토리(Long principalId, Pageable pageable){
         Page<Image> images = imageRepository.mStory(principalId, pageable);
+
+        //이미지 리스트 조회
+        //1번이미지
+           //
+        images.forEach(image->{
+            image.setLikeCount(image.getLikes().size());
+            image.getLikes().forEach((like)->{
+                if(like.getUser().getId().equals(principalId)){
+                    image.setLikeState(true);
+                }
+            });
+        });
+
         return images;
     }
 
@@ -86,13 +105,5 @@ public class ImageService {
         Image imageEntity = imageRepository.save(image);
     }
 
-    @Transactional(readOnly = false)
-    public void 좋아요(Long principalId, Long imageId){
-        likesRepository.mLike(principalId,imageId);
-    }
 
-    @Transactional(readOnly = false)
-    public void 좋아요취소(Long principalId, Long imageId){
-        likesRepository.mUnLike(principalId,imageId);
-    }
 }

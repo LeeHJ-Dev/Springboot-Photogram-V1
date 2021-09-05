@@ -43,9 +43,16 @@ function getStoryItem(u) {
 
                    <div class="sl__item__contents">
                        <div class="sl__item__contents__icon">
-                           <button><i class="fas fa-heart active" id="storyLikeIcon-1" onclick="toggleLike()"></i></button>
+
+                           <button>`;
+                                if(u.likeState){
+                                    item += `<i class="fas fa-heart active" id="storyLikeIcon-${u.id}" onclick="toggleLike(${u.id})"></i>`
+                                }else{
+                                    item += `<i class="far fa-heart" id="storyLikeIcon-${u.id}" onclick="toggleLike(${u.id})"></i>`
+                                }
+                   item+= `</button>
                        </div>
-                       <span class="like"><b id="storyLikeCount-1">3</b>likes</span>
+                       <span class="like"><b id="storyLikeCount-${u.id}">${u.likeCount}</b>likes</span>
 
                        <div class="sl__item__contents__content"><p>${u.caption}</p></div>
 
@@ -70,15 +77,12 @@ function getStoryItem(u) {
 
 // (2) 스토리 스크롤 페이징하기
 $(window).scroll(() =>{
-    console.log("스크롤중");
-
-    console.log("윈도우 scrollTop ",$(window).scrollTop());
-    console.log("윈도우 문서의 높이",$(document).height());
-    console.log("윈도우 높이",$(window).height());
+    //console.log("윈도우 scrollTop ",$(window).scrollTop());
+    //console.log("윈도우 문서의 높이",$(document).height());
+    //console.log("윈도우 높이",$(window).height());
 
     let checkSum = $(window).scrollTop() - ($(document).height() - $(window).height());
-    console.log("계산된 값 ", checkSum);
-
+    //console.log("계산된 값 ", checkSum);
     if(checkSum <1 && checkSum > -1){
         console.log("스크롤이벤트 발생");
         page++;
@@ -89,16 +93,50 @@ $(window).scroll(() =>{
 
 
 // (3) 좋아요, 안좋아요
-function toggleLike() {
-	let likeIcon = $("#storyLikeIcon-1");
+function toggleLike(imageId) {
+	let likeIcon = $(`#storyLikeIcon-${imageId}`);
 	if (likeIcon.hasClass("far")) {
-		likeIcon.addClass("fas");
-		likeIcon.addClass("active");
-		likeIcon.removeClass("far");
+	    //좋아요
+	    $.ajax({
+	        type: "post",
+	        url: `/api/image/${imageId}/like`,
+	        dataType: "json"
+	    }).done(res=>{
+	        console.log("좋아요 성공",res);
+
+	        //좋아요 건수 체크
+	        let likeCountStr = $(`#storyLikeCount-${imageId}`).text();
+	        let likeCount = Number(likeCountStr)+1;
+	        $(`#storyLikeCount-${imageId}`).text(likeCount);
+
+
+	        //하트 변경
+            likeIcon.addClass("fas");
+            likeIcon.addClass("active");
+            likeIcon.removeClass("far");
+	    }).fail(error=>{
+	        console.log("좋아요 실패",error);
+	    });
 	} else {
-		likeIcon.removeClass("fas");
-		likeIcon.removeClass("active");
-		likeIcon.addClass("far");
+	    //좋아요취소
+	    $.ajax({
+	        type: "delete",
+	        url: `/api/image/${imageId}/like`,
+	        dataType: "json"
+	    }).done(res=>{
+	        console.log("좋아요취소 성공",res);
+
+            //좋아요 건수 체크
+            let likeCountStr = $(`#storyLikeCount-${imageId}`).text();
+            let likeCount = Number(likeCountStr)-1;
+            $(`#storyLikeCount-${imageId}`).text(likeCount);
+
+            likeIcon.removeClass("fas");
+            likeIcon.removeClass("active");
+            likeIcon.addClass("far");
+	    }).fail(error=>{
+	        console.log("좋아요취소 실패",error);
+	    });
 	}
 }
 
