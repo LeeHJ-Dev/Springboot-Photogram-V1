@@ -1,5 +1,7 @@
 package com.cos.photogramstart.config;
 
+import com.cos.photogramstart.config.oauth.OAuth2DetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration  //IOC
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private OAuth2DetailsService oauth2DetailsService;
     /**
      * SpringBoot PasswordEncoder
      * @return
@@ -20,18 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         /**
          * super 삭제 - 기존 시큐리티가 가지고 있는 기능이 다 비활성화된다.
-         */
-        //super.configure(http);
-
-
-        /**
-         *
          */
         http
                 .csrf()
@@ -46,10 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/auth/signin") //get
                 .loginProcessingUrl("/auth/signin") //post
                 .defaultSuccessUrl("/")
+
+                .and()
+                    .oauth2Login()
+                    .userInfoEndpoint()
+                    .userService(oauth2DetailsService)
                 ;
-
-
-
 
     }
 

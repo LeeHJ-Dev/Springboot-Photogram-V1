@@ -47,6 +47,7 @@ public class UserApiController {
          * @Valid 어노테이션으로 UserUpdateDto(의) 조건체크에서 오류가 발생하는경우
          * BindingResult 객체에 에러(field, errorMessage)를 저장한다.
          */
+        /* AOP 처리
         if(bindingResult.hasErrors()){
             Map<String, String> errMap = new HashMap<>();
             for(FieldError fieldError : bindingResult.getFieldErrors()){
@@ -54,7 +55,7 @@ public class UserApiController {
             }
             throw new CustomValidationApiException("유효성검사실패",errMap);
         }
-
+        */
         /**
          * 회원정보 수정
          */

@@ -8,9 +8,8 @@
 */
 
 let principalId = $("#principalId").val();
-alert(principalId);
-
 let page = 0;
+
 // (1) 스토리 로드하기
 function storyLoad() {
     $.ajax({
